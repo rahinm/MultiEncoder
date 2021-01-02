@@ -5,7 +5,7 @@
 
 	<groupId>net.dollmar.tools</groupId>
 	<artifactId>multi-encoder</artifactId>
-	<version>0.1</version>
+	<version>0.2-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>Multi Encoder</name>
@@ -22,7 +22,7 @@
 		<version.java>1.8</version.java>
 		<version.maven.compiler.plugin>3.1</version.maven.compiler.plugin>
 		<version.maven.jar.plugin>2.2</version.maven.jar.plugin>
-		<version.apache.commons.codec>1.15</version.apache.commons.codec>		
+		<version.apache.commons.codec>1.15</version.apache.commons.codec>
 		<version.spring.boot.plugin>2.2.6.RELEASE</version.spring.boot.plugin>
 
 	</properties>
@@ -56,6 +56,7 @@
 				</configuration>
 			</plugin>
 
+      <!-- Spring Boot Maven Plugin -->
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>

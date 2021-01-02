@@ -1,6 +1,8 @@
 MultiEncoder
 ============
 
+[!Image](src/misc/MultiEncoder.png "screenshot")
+
 MultiEncoder is a simple GUI tool to convert text data into a variety of encoded
 formats. Currently binary, octal, hex, base32 and base64 encoding formats are 
 supported. It is also possible to decode an encoded data into its raw text format

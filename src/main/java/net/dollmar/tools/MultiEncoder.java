@@ -23,18 +23,29 @@ import java.util.Base64;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 
+/**
+ * MultiEncoder is a simple GUI tool to convert text data into a variety of encoded
+ * formats. Currently binary, octal, hex, base32 and base64 encoding formats are
+ * supported. It is also possible to decode an encoded data into its raw text format
+ * as well as other supported encoding formats.
+ * 
+ * This tool is inspired by the Translator, Binary on-line tool available at
+ * https://paulschou.com/tools/xlate/ and written in Java for local execution on
+ * different platforms. 
+ * 
+ * This is a free software. Permission is granted for all forms of use 
+ * except for any form intended for causing malicious damage.
+ *  
+ * @author Mohammad A. Rahin / Dollmar Enterprises Ltd
+ */
 public class MultiEncoder {
 
-  private static final String VERSION_NUMBER = "0.1-SNAPSHOT";
-  private static final String COPYRIGHT = "(c) 2020 Dollmar Enterprises Ltd.";
+  private static final String VERSION_NUMBER = "0.2-SNAPSHOT";
+  private static final String COPYRIGHT = "(c) 2021 Dollmar Enterprises Ltd.";
 
   private JFrame frame;
   private JTextArea textArea;
-  private JTextField md5Value;
-  private JTextField sha1Value;
-  private JTextField sha256Value;
-  private JTextField sha512Value;
-  private JTextField sha384Value;
+  private JTextArea hashValues;
   private JTextField binaryData;
   private JTextField octalData;
   private JTextField hexData;
@@ -54,6 +65,7 @@ public class MultiEncoder {
    */
   private void initialize() {
     frame = new JFrame("MultiEncoder");
+    frame.setResizable(false);
     frame.setBounds(100, 100, 600, 720);
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -77,15 +89,9 @@ public class MultiEncoder {
 
     JPanel textPanel = new JPanel();
     textPanel.setBorder(BorderFactory.createTitledBorder("Text"));
-    textPanel.setBounds(12, 12, 264, 208);
+    textPanel.setBounds(12, 12, 281, 208);
     mainPanel.add(textPanel);
     textPanel.setLayout(null);
-
-    //    JScrollPane scroll = new JScrollPane (textArea);
-    //    scroll.setVerticalScrollBarPolicy (ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-    //    scroll.setHorizontalScrollBarPolicy (ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-    //    textPanel.add(scroll);
-
 
     JButton btnEncode = new JButton("Encode");
     btnEncode.addActionListener(new ActionListener() {
@@ -103,7 +109,7 @@ public class MultiEncoder {
     textPanel.add(btnEncode);
 
     JScrollPane scrollPane = new JScrollPane();
-    scrollPane.setBounds(12, 28, 240, 133);
+    scrollPane.setBounds(12, 28, 258, 133);
     textPanel.add(scrollPane);
 
     textArea = new JTextArea();
@@ -113,73 +119,26 @@ public class MultiEncoder {
 
     JPanel hashPanel = new JPanel();
     hashPanel.setBorder(BorderFactory.createTitledBorder("Hash Values"));
-    hashPanel.setBounds(288, 12, 300, 208);
+    hashPanel.setBounds(310, 12, 281, 208);
     mainPanel.add(hashPanel);
     hashPanel.setLayout(null);
 
-    JLabel lblMd = new JLabel("MD5");
-    lblMd.setBounds(12, 25, 70, 15);
-    hashPanel.add(lblMd);
-
-    md5Value = new JTextField();
-    md5Value.setEditable(false);
-    md5Value.setBounds(74, 23, 214, 19);
-    hashPanel.add(md5Value);
-    md5Value.setColumns(10);
-
-    JLabel lblSha = new JLabel("SHA-1");
-    lblSha.setBounds(12, 56, 70, 15);
-    hashPanel.add(lblSha);
-
-    sha1Value = new JTextField();
-    sha1Value.setEditable(false);
-    sha1Value.setColumns(10);
-    sha1Value.setBounds(74, 54, 214, 19);
-    hashPanel.add(sha1Value);
-
-    JLabel lblSha_1 = new JLabel("SHA-256");
-    lblSha_1.setBounds(12, 83, 70, 15);
-    hashPanel.add(lblSha_1);
-
-    sha256Value = new JTextField();
-    sha256Value.setEditable(false);
-    sha256Value.setColumns(10);
-    sha256Value.setBounds(74, 83, 214, 19);
-    hashPanel.add(sha256Value);
-
-    JLabel lblSha_1_1 = new JLabel("SHA-512");
-    lblSha_1_1.setBounds(12, 142, 70, 15);
-    hashPanel.add(lblSha_1_1);
-
-    sha512Value = new JTextField();
-    sha512Value.setEditable(false);
-    sha512Value.setColumns(10);
-    sha512Value.setBounds(74, 140, 214, 19);
-    hashPanel.add(sha512Value);
-
-    JLabel lblSha_1_2 = new JLabel("SHA-384");
-    lblSha_1_2.setBounds(12, 110, 70, 15);
-    hashPanel.add(lblSha_1_2);
-
-    sha384Value = new JTextField();
-    sha384Value.setEditable(false);
-    sha384Value.setColumns(10);
-    sha384Value.setBounds(74, 110, 214, 19);
-    hashPanel.add(sha384Value);
+    JScrollPane scrollPane_1 = new JScrollPane();
+    scrollPane_1.setBounds(12, 28, 258, 133);
+    hashPanel.add(scrollPane_1);
+    
+    hashValues = new JTextArea();
+    scrollPane_1.setViewportView(hashValues);
 
     JButton btnReset = new JButton("Reset");
     btnReset.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        md5Value.setText("");
-        sha1Value.setText("");
-        sha256Value.setText("");
-        sha384Value.setText("");
-        sha512Value.setText("");
+        hashValues.setText("");
       }
     });
-    btnReset.setBounds(12, 169, 87, 19);
+    btnReset.setBounds(22, 173, 87, 19);
     hashPanel.add(btnReset);
-
+    
     JPanel encPanel = new JPanel();
     encPanel.setBounds(12, 232, 576, 375);
     encPanel.setBorder(BorderFactory.createTitledBorder("Encoded Data"));
@@ -204,7 +163,7 @@ public class MultiEncoder {
           byte[] dataBytes = Utils.getBytes(textData);
 
           setHashValues(dataBytes);
-          setTextData(dataBytes);
+          setTextData(textArea, dataBytes);
           setOctalEncodedData(dataBytes);
           setHexEncodedData(dataBytes);
           setBase32EncodedData(dataBytes);
@@ -233,7 +192,7 @@ public class MultiEncoder {
           byte[] dataBytes = Utils.getBytes(textData);
 
           setHashValues(dataBytes);
-          setTextData(dataBytes);
+          setTextData(textArea, dataBytes);
           setBinaryEncodedData(dataBytes);
           setHexEncodedData(dataBytes);
           setBase32EncodedData(dataBytes);
@@ -266,7 +225,7 @@ public class MultiEncoder {
             dataBytes = Utils.getBytes("ERROR: Invalid hex string!!!");
           }
           setHashValues(dataBytes);
-          setTextData(dataBytes);
+          setTextData(textArea, dataBytes);
           setBinaryEncodedData(dataBytes);
           setOctalEncodedData(dataBytes);
           setBase32EncodedData(dataBytes);
@@ -293,7 +252,7 @@ public class MultiEncoder {
         if (!Utils.isEmptyString(fieldVal)) {
           byte[] dataBytes = new Base32().decode(fieldVal);
           setHashValues(dataBytes);
-          setTextData(dataBytes);
+          setTextData(textArea, dataBytes);
           setBinaryEncodedData(dataBytes);
           setOctalEncodedData(dataBytes);
           setHexEncodedData(dataBytes);
@@ -320,7 +279,7 @@ public class MultiEncoder {
         if (!Utils.isEmptyString(fieldVal)) {
           byte[] dataBytes = Base64.getDecoder().decode(fieldVal);
           setHashValues(dataBytes);
-          setTextData(dataBytes);
+          setTextData(textArea, dataBytes);
           setBinaryEncodedData(dataBytes);
           setOctalEncodedData(dataBytes);
           setHexEncodedData(dataBytes);
@@ -333,7 +292,7 @@ public class MultiEncoder {
   }
 
 
-  private void setTextFieldValue(JTextField textField, String val) {
+  private void setTextFieldValue(JTextField textField, final String val) {
     textField.setText(val);
     textField.requestFocus();
     textField.setCaretPosition(0);    
@@ -341,22 +300,25 @@ public class MultiEncoder {
 
 
   private void setHashValues(final byte[] dataBytes) {
-    setTextFieldValue(md5Value, Utils.calculateHash(dataBytes, "MD5"));
-    setTextFieldValue(sha1Value, Utils.calculateHash(dataBytes, "SHA1"));
-    setTextFieldValue(sha256Value, Utils.calculateHash(dataBytes, "SHA-256"));
-    setTextFieldValue(sha384Value, Utils.calculateHash(dataBytes, "SHA-384"));
-    setTextFieldValue(sha512Value, Utils.calculateHash(dataBytes, "SHA-512"));
+    StringBuilder sb = new StringBuilder();
+    sb.append("MD5: ").append(Utils.calculateHash(dataBytes, "MD5")).append(System.getProperty("line.separator"));
+    sb.append("SHA1: ").append(Utils.calculateHash(dataBytes, "SHA1")).append(System.getProperty("line.separator"));;
+    sb.append("SHA256: ").append(Utils.calculateHash(dataBytes, "SHA-256")).append(System.getProperty("line.separator"));;
+    sb.append("SHA384: ").append(Utils.calculateHash(dataBytes, "SHA-384")).append(System.getProperty("line.separator"));;
+    sb.append("SHA512: ").append(Utils.calculateHash(dataBytes, "SHA-512"));
+    
+    setTextAreaValue(hashValues, sb.toString());
   }
 
-  private void setTextData(final String data) {
+  private void setTextAreaValue(JTextArea textArea, final String data) {
     textArea.setText(data);
     textArea.requestFocus();
     textArea.setCaretPosition(0);    
   }
 
 
-  private void setTextData(final byte[] dataBytes) {
-    setTextData(new String(dataBytes));
+  private void setTextData(JTextArea textArea, final byte[] dataBytes) {
+    setTextAreaValue(textArea, new String(dataBytes));
   }
 
 
