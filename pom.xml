@@ -5,7 +5,7 @@
 
 	<groupId>net.dollmar.tools</groupId>
 	<artifactId>multi-encoder</artifactId>
-	<version>0.2-SNAPSHOT</version>
+	<version>0.2</version>
 	<packaging>jar</packaging>
 
 	<name>Multi Encoder</name>

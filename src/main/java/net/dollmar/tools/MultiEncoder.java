@@ -40,7 +40,7 @@ import javax.swing.JScrollPane;
  */
 public class MultiEncoder {
 
-  private static final String VERSION_NUMBER = "0.2-SNAPSHOT";
+  private static final String VERSION_NUMBER = "0.2";
   private static final String COPYRIGHT = "(c) 2021 Dollmar Enterprises Ltd.";
 
   private JFrame frame;
